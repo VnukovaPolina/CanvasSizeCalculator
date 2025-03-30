@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Калькулятор канвы</string>
+    <string name="embroidery_size_title">Размер вышивки в крестиках:</string>
+    <string name="width_title">Ширина</string>
+    <string name="heigth_title">Высота</string>
+    <string name="embroidery_sizes_title">Размеры вышивки на канве:</string>
+    <string name="Aida14">Аида 14 / Равномерка 28:</string>
+    <string name="Aida16">Аида 16 / Равномерка 32</string>
+    <string name="Aida18">Аида 18 / Равномерка 36</string>
+    <string name="evenweave40">Равномерка 40:</string>
+    <string name="buttonTextCalculateSize">Рассчитать размер канвы</string>
+</resources>
