@@ -1,88 +1,39 @@
 package xstitchcatwalk.canvassize.ui.theme
 
-
-import android.R.id.primary
-import android.os.Build
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import xstitchcatwalk.canvassize.R
 
-val PlayfairDisplayFamily = FontFamily(
-    Font(R.font.playfair_display_semibold, FontWeight.SemiBold),
-    Font(R.font.playfair_display_bold, FontWeight.Bold),
-    Font(R.font.playfair_display_bold_italic, FontWeight.Bold, FontStyle.Italic),
-    Font(R.font.playfair_display, FontWeight.Normal),
-    Font(R.font.playfair_display_medium, FontWeight.Medium)
+val bodyFontFamily = FontFamily(
+        Font(R.font.playfair, FontWeight.Normal)
 )
 
-val playfairFamily = FontFamily(
-    Font(R.font.playfair, FontWeight.Normal)
+val displayFontFamily = FontFamily(
+        Font(R.font.playfair_display, FontWeight.Normal),
+        Font(R.font.playfair_display_bold, FontWeight.Bold)
 )
 
-val interFamily = FontFamily(
-    Font(R.font.inter_light, FontWeight.Light),
-    Font(R.font.inter, FontWeight.Normal),
-    Font(R.font.inter_bold, FontWeight.Bold)
-)
+val baseline = Typography()
 
-val manropeFamily = FontFamily(
-    Font(R.font.manrope_light, FontWeight.Light),
-    Font(R.font.manrope_regular, FontWeight.Normal),
-    Font(R.font.manrope_medium, FontWeight.Medium)
-)
-
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = playfairFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-
-    bodyMedium = TextStyle(
-        fontFamily = playfairFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 22.sp,
-        letterSpacing = 0.5.sp
-    ),
-
-    titleLarge = TextStyle(
-        fontFamily = PlayfairDisplayFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-
-    headlineLarge = TextStyle(
-        fontFamily = PlayfairDisplayFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 32.sp,
-        lineHeight = 36.sp,
-        letterSpacing = 0.5.sp
-    ),
-
-    labelLarge = TextStyle(
-        fontFamily = playfairFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 18.sp,
-        letterSpacing = 0.5.sp
-    ),
-
-    labelMedium = TextStyle(
-        fontFamily = playfairFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
+val AppTypography = Typography(
+    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
+    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
+    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
+    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
+    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
+    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
+    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
+    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
+    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
+    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
+    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
+    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
+    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
+    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
 )

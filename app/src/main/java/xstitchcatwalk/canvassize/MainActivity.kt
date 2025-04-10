@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import xstitchcatwalk.canvassize.ui.theme.CanvasSizeTheme
+import xstitchcatwalk.canvassize.ui.theme.AppTheme
 import xstitchcatwalk.canvassize.viewmodel.CanvasSizeViewModel
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CanvasSizeTheme {
+            AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CanvasSizeCalculatorScreen(
                         modifier = Modifier.padding(innerPadding),
@@ -200,7 +200,7 @@ fun CanvasSizeCalculatorScreen(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    CanvasSizeTheme {
+    AppTheme {
         CanvasSizeCalculatorScreen(viewModel = FakeCanvasSizeViewModel())
     }
 }
