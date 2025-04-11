@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-open class CanvasSizeViewModel : ViewModel() {
+open class StitchersAppViewModel : ViewModel() {
 
     val canvasCounts = listOf(14, 16, 18)
 

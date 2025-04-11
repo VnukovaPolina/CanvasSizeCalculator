@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cross stitch helper</string>
+    <string name="app_name">C</string>
+    <string name="embroidery_size_title">Embroidery size in stitches:</string>
+    <string name="width_title">Width</string>
+    <string name="heigth_title">Height</string>
+    <string name="embroidery_sizes_title">Embroidery size on canvas:</string>
+    <string name="Aida14">Aida 14:</string>
+    <string name="buttonTextCalculateSize">Calculate canvas size</string>
+    <string name="Aida16">Aida 16:</string>
+    <string name="Aida18">Aida 18:</string>
+    <string name="evenweave40">Evenweave 40:</string>
+</resources>

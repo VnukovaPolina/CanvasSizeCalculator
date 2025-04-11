@@ -15,7 +15,10 @@ val bodyFontFamily = FontFamily(
 
 val displayFontFamily = FontFamily(
         Font(R.font.playfair_display, FontWeight.Normal),
-        Font(R.font.playfair_display_bold, FontWeight.Bold)
+        Font(R.font.playfair_display_bold, FontWeight.Bold),
+        Font(R.font.playfair_display_bold_italic, FontWeight.Bold, FontStyle.Italic),
+        Font(R.font.playfair_display_medium, FontWeight.Medium),
+        Font(R.font.playfair_display_semibold, FontWeight.SemiBold)
 )
 
 val baseline = Typography()

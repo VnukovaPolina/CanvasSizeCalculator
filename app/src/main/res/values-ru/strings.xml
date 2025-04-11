@@ -1,12 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Вышивальный помощник</string>
     <string name="embroidery_size_title">Размер вышивки в крестиках:</string>
+    <string name="embroidery_size_title">Р</string>
     <string name="width_title">Ширина</string>
     <string name="heigth_title">Высота</string>
     <string name="embroidery_sizes_title">Размеры вышивки на канве:</string>
     <string name="Aida14">Аида 14:</string>
-    <string name="Aida18">Аида 18</string>
-    <string name="evenweave40">Равномерка 40:</string>
     <string name="buttonTextCalculateSize">Рассчитать размер канвы</string>
+    <string name="buttonTextCalculateSize">Р</string>
     <string name="Aida16">Аида 16:</string>
+    <string name="Aida18">Аида 18:</string>
+    <string name="evenweave40">Равномерка 40:</string>
 </resources>
