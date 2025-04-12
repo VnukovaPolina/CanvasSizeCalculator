@@ -1,7 +1,7 @@
 package xstitchcatwalk.canvassize.preview
 
-import xstitchcatwalk.canvassize.viewmodel.CanvasSizeViewModel
+import xstitchcatwalk.canvassize.viewmodel.StitchersAppViewModel
 
-class FakeCanvasSizeViewModel : CanvasSizeViewModel() {
+class FakeCanvasSizeViewModel : StitchersAppViewModel() {
 
 }

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,10 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import xstitchcatwalk.canvassize.preview.FakeCanvasSizeViewModel
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -44,18 +42,23 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.viewmodel.StitchersAppViewModel
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.foundation.background
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 
 class MainActivity : ComponentActivity() {
     private val viewModel: StitchersAppViewModel by viewModels()
@@ -68,8 +71,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CrossStitchersApp(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
@@ -78,49 +80,139 @@ class MainActivity : ComponentActivity() {
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrossStitchersApp(modifier: Modifier = Modifier) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val snackbarHostState = remember { SnackbarHostState() }
+    val navController = rememberNavController()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var selectedItem by remember { mutableStateOf(0) }
+    val viewModel: StitchersAppViewModel = viewModel()
+
+    val iconTint = MaterialTheme.colorScheme.onSurface
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Text("Меню", modifier = Modifier.padding(16.dp))
-            // Пункты меню...
-        },
-        modifier = TODO(),
-        gesturesEnabled = TODO(),
-        scrimColor = TODO(),
-        content = TODO()
-    )
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.primaryContainer
+                                )
+                            )
+                        )
+                ) {
+                    Text(
+                        stringResource(R.string.menu),
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Вышивка крестиком") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { scope.launch { drawerState.open() } }
-                    ) {
-                        Icon(Icons.Default.Menu, null)
+                NavigationDrawerItem(
+                    label = { Text("Калькулятор размера канвы") },
+                    selected = selectedItem == 0,
+                    onClick = {
+                        selectedItem = 0
+                        scope.launch { drawerState.close() }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_canvas_24),
+                            contentDescription = "Калькулятор размера канвы",
+                            tint = iconTint
+                        )
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Расчет расхода нитей") },
+                    selected = selectedItem == 1,
+                    onClick = {
+                        selectedItem = 1
+                        scope.launch { drawerState.close() }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_palette_24),
+                            contentDescription = "Расчет расхода нитей",
+                            tint = iconTint
+                        )
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Таймер вышивания") },
+                    selected = selectedItem == 2,
+                    onClick = {
+                        selectedItem = 2
+                        scope.launch { drawerState.close() }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_timer_24),
+                            contentDescription = "Таймер вышивания",
+                            tint = iconTint
+                        )
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Настройки") },
+                    selected = selectedItem == 3,
+                    onClick = {
+                        selectedItem = 3
+                        scope.launch { drawerState.close() }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_settings_24),
+                            contentDescription = "Настройки",
+                            tint = iconTint
+                        )
+                    }
+                )
+
+            }
+        }
+    ) {
+
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text(stringResource(R.string.app_name)) },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { scope.launch { drawerState.open() } }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_menu_24),
+                                contentDescription = stringResource(R.string.menu),
+                                tint = iconTint
+                            )
+                        }
+                    }
+                )
+            },
+
+            content = { padding ->
+                Box(modifier = Modifier.padding(padding)) {
+                    when (selectedItem) {
+                        0 -> CanvasSizeCalculatorScreen()
+                        1 -> ThreadsConsumptionCalculateScreen()
+                        2 -> TimerScreen()
+                        3 -> SettingsScreen()
                     }
                 }
-            )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-        NavHost(
-            navController = navController,
-            startDestination = "calculator",
-            modifier = Modifier.padding(padding)
-        ) {
-            composable("calculator") { CanvasSizeCalculatorScreen(viewModel = StitchersAppViewModel()) }
-                //composable("threads") { ThreadCalculatorScreen() }
-            //composable("timer") { StitchingTimerScreen() }
-            //composable("settings") { SettingsScreen() }
-        }
+            }
+        )
     }
 }
 
@@ -128,9 +220,10 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun CanvasSizeCalculatorScreen(
-    modifier: Modifier = Modifier,
-    viewModel: FakeCanvasSizeViewModel
+    modifier: Modifier.Companion = Modifier
 ) {
+    val viewModel: StitchersAppViewModel = viewModel()
+
     Column(Modifier
         .fillMaxWidth()
         .padding(top = 64.dp),
@@ -250,11 +343,26 @@ fun CanvasSizeCalculatorScreen(
     }
 }
 
+@Composable
+fun ThreadsConsumptionCalculateScreen() {
+    Text("Расчет расхода нитей")
+}
+
+@Composable
+fun TimerScreen() {
+    Text("Timer screen")
+}
+
+@Composable
+fun SettingsScreen() {
+    Text("Settings screen")
+}
+
 @RequiresApi(Build.VERSION_CODES.Q)
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        CanvasSizeCalculatorScreen(viewModel = FakeCanvasSizeViewModel())
+        CanvasSizeCalculatorScreen()
     }
 }
