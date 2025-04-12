@@ -10,4 +10,11 @@
     <string name="buttonTextCalculateSize">Рассчитать размер канвы</string>
     <string name="Aida16">Аида 16:</string>
     <string name="menu">Меню</string>
+    <string name="canvas_size_calculator">Калькулятор размера канвы</string>
+    <string name="threads_consumption_calculator">Расчет расхода нитей</string>
+    <string name="stitching_time_timer">Таймер вышивания</string>
+    <string name="settings_in_app">Настройки</string>
+    <string name="Aida">Аида</string>
+    <string name="cm_dimensions">см</string>
+    <string name="meters_dimensions">м</string>
 </resources>

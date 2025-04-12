@@ -11,4 +11,11 @@
     <string name="Aida18">Aida 18:</string>
     <string name="evenweave40">Evenweave 40:</string>
     <string name="menu">Menu</string>
+    <string name="canvas_size_calculator">Canvas size calculator</string>
+    <string name="threads_consumption_calculator">Threads consumption calculator</string>
+    <string name="stitching_time_timer">Stitching timer</string>
+    <string name="settings_in_app">Settings</string>
+    <string name="Aida">Aida</string>
+    <string name="cm_dimensions">cm</string>
+    <string name="meters_dimensions">m</string>
 </resources>
