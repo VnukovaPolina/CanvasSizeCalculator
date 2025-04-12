@@ -18,4 +18,5 @@
     <string name="Aida">Аида</string>
     <string name="cm_dimensions">см</string>
     <string name="meters_dimensions">м</string>
+    <string name="aida_size_template">Аида %1$d: %2$.2f см × %3$.2f см</string>
 </resources>

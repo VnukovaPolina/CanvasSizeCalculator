@@ -330,7 +330,12 @@ fun CanvasSizeCalculatorScreen(
                             contentColor = MaterialTheme.colorScheme.onSurface
                         )) {
                         Text(
-                            text = "Аида $count: ${"%.2f".format(size.first)} см × ${"%.2f".format(size.second)} см",
+                            text = stringResource(
+                                R.string.aida_size_template,
+                                count,
+                                size.first,
+                                size.second
+                            ),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
                                 .padding(8.dp)
