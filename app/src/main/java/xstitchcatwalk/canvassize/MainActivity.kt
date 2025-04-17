@@ -48,7 +48,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.viewmodel.StitchersAppViewModel
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -56,9 +55,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     private val viewModel: StitchersAppViewModel by viewModels()
@@ -88,9 +91,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
     val viewModel: StitchersAppViewModel = viewModel()
-
     val iconTint = MaterialTheme.colorScheme.onSurface
-
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -117,7 +118,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                 }
 
                 NavigationDrawerItem(
-                    label = { Text("Калькулятор размера канвы") },
+                    label = { stringResource(R.string.canvas_size_calculator) },
                     selected = selectedItem == 0,
                     onClick = {
                         selectedItem = 0
@@ -126,14 +127,14 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.outline_canvas_24),
-                            contentDescription = "Калькулятор размера канвы",
+                            contentDescription = stringResource(R.string.canvas_size_calculator),
                             tint = iconTint
                         )
                     }
                 )
 
                 NavigationDrawerItem(
-                    label = { Text("Расчет расхода нитей") },
+                    label = { stringResource(R.string.threads_consumption_calculator) },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
@@ -142,14 +143,14 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.outline_palette_24),
-                            contentDescription = "Расчет расхода нитей",
+                            contentDescription = stringResource(R.string.threads_consumption_calculator),
                             tint = iconTint
                         )
                     }
                 )
 
                 NavigationDrawerItem(
-                    label = { Text("Таймер вышивания") },
+                    label = { stringResource(R.string.stitching_time_timer) },
                     selected = selectedItem == 2,
                     onClick = {
                         selectedItem = 2
@@ -158,14 +159,14 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.outline_timer_24),
-                            contentDescription = "Таймер вышивания",
+                            contentDescription = stringResource(R.string.stitching_time_timer),
                             tint = iconTint
                         )
                     }
                 )
 
                 NavigationDrawerItem(
-                    label = { Text("Настройки") },
+                    label = { stringResource(R.string.settings_in_app) },
                     selected = selectedItem == 3,
                     onClick = {
                         selectedItem = 3
@@ -174,8 +175,8 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.outline_settings_24),
-                            contentDescription = "Настройки",
-                            tint = iconTint
+                            contentDescription = stringResource(R.string.settings_in_app),
+                        tint = iconTint
                         )
                     }
                 )
@@ -348,9 +349,136 @@ fun CanvasSizeCalculatorScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadsConsumptionCalculateScreen() {
-    Text("Расчет расхода нитей")
+    val viewModel: StitchersAppViewModel = viewModel()
+
+    var crossStitchTechnique = stringResource(R.string.cross_stitch_technique)
+    var halfCrossTechnique = stringResource(R.string.halfcross_technique)
+    var backstitchTechnique = stringResource(R.string.backstitch_technique)
+    val techniques = listOf(crossStitchTechnique, halfCrossTechnique, backstitchTechnique)
+
+    val stitches by viewModel.stitches.collectAsStateWithLifecycle()
+    var fabricCount by remember {mutableStateOf("")}
+    val strands by viewModel.strands.collectAsStateWithLifecycle()
+    var technique by remember {mutableStateOf(techniques[0])}
+    var isTechniqueMenuExpanded by remember {mutableStateOf(false)}
+
+    Column(Modifier
+        .fillMaxWidth()
+        .padding(top = 64.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        OutlinedTextField(
+            value = stitches,
+            onValueChange = { newValue ->
+                viewModel.updateStitches(newValue) },
+            label = {Text(
+                stringResource(R.string.set_stitches_number),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.labelLarge
+            )},
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .width(120.dp)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
+        )
+
+        OutlinedTextField(
+            value = fabricCount,
+            onValueChange = { fabricCount = it },
+            label = {Text(
+                stringResource(R.string.set_fabric_count),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.labelLarge
+            )},
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .width(120.dp)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
+        )
+
+        OutlinedTextField(
+            value = strands,
+            onValueChange = { newValue ->
+                viewModel.updateStrands(newValue) },
+            label = {Text(
+                stringResource(R.string.set_strands),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.labelLarge
+            )},
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .width(120.dp)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
+        )
+
+        ExposedDropdownMenuBox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            expanded = isTechniqueMenuExpanded,
+            onExpandedChange = {isTechniqueMenuExpanded = it}
+        ) {
+            OutlinedTextField(
+                value = technique,
+                onValueChange = {},
+                label = {
+                    Text(
+                        stringResource(R.string.set_stitch_technique),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                },
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = isTechniqueMenuExpanded
+                )},
+                modifier = Modifier
+                    .width(120.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 8.dp)
+                    .menuAnchor()
+            )
+            ExposedDropdownMenu(
+                expanded = isTechniqueMenuExpanded,
+                onDismissRequest = {isTechniqueMenuExpanded = false}
+            ) {
+                techniques.forEach { techniqueOnList ->
+                    DropdownMenuItem(
+                        text = {Text(
+                            techniqueOnList,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.labelLarge
+                        )},
+                        onClick = {
+                            technique = techniqueOnList
+                            isTechniqueMenuExpanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
