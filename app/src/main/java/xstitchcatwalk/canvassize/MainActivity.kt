@@ -1,7 +1,5 @@
 package xstitchcatwalk.canvassize
 
-import android.R.attr.enabled
-import android.R.attr.type
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -57,7 +55,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -65,6 +62,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.ExposedDropdownMenuBoxScope
+import androidx.compose.material3.MenuAnchorType
 
 class MainActivity : ComponentActivity() {
     private val viewModel: StitchersAppViewModel by viewModels()
@@ -121,7 +120,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                 }
 
                 NavigationDrawerItem(
-                    label = { stringResource(R.string.canvas_size_calculator) },
+                    label = { Text(stringResource(R.string.canvas_size_calculator)) },
                     selected = selectedItem == 0,
                     onClick = {
                         selectedItem = 0
@@ -137,7 +136,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                 )
 
                 NavigationDrawerItem(
-                    label = { stringResource(R.string.threads_consumption_calculator) },
+                    label = { Text(stringResource(R.string.threads_consumption_calculator)) },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
@@ -153,7 +152,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                 )
 
                 NavigationDrawerItem(
-                    label = { stringResource(R.string.stitching_time_timer) },
+                    label = { Text(stringResource(R.string.stitching_time_timer)) },
                     selected = selectedItem == 2,
                     onClick = {
                         selectedItem = 2
@@ -169,7 +168,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
                 )
 
                 NavigationDrawerItem(
-                    label = { stringResource(R.string.settings_in_app) },
+                    label = { Text(stringResource(R.string.settings_in_app)) },
                     selected = selectedItem == 3,
                     onClick = {
                         selectedItem = 3
@@ -366,12 +365,13 @@ fun ThreadsConsumptionCalculateScreen() {
     var fabricCount by remember {mutableStateOf("")}
     val strands by viewModel.strands.collectAsStateWithLifecycle()
     var technique by remember {mutableStateOf(techniques[0])}
-    var isTechniqueMenuExpanded by remember {mutableStateOf(false)}
+    var expanded by remember {mutableStateOf(false)}
 
     Column(Modifier
         .fillMaxWidth()
         .padding(top = 64.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
             value = stitches,
@@ -389,7 +389,7 @@ fun ThreadsConsumptionCalculateScreen() {
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
-                .width(120.dp)
+                .width(300.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp)
         )
@@ -409,7 +409,7 @@ fun ThreadsConsumptionCalculateScreen() {
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
-                .width(120.dp)
+                .width(300.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp)
         )
@@ -430,7 +430,7 @@ fun ThreadsConsumptionCalculateScreen() {
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
-                .width(120.dp)
+                .width(300.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp)
         )
@@ -439,8 +439,8 @@ fun ThreadsConsumptionCalculateScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
-            expanded = isTechniqueMenuExpanded,
-            onExpandedChange = {isTechniqueMenuExpanded = it}
+            expanded = expanded,
+            onExpandedChange = {expanded = it}
         ) {
             OutlinedTextField(
                 value = technique,
@@ -454,17 +454,17 @@ fun ThreadsConsumptionCalculateScreen() {
                 },
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = isTechniqueMenuExpanded
+                    expanded = expanded
                 )},
                 modifier = Modifier
-                    .width(120.dp)
+                    .width(300.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 8.dp)
-                    .clickable {isTechniqueMenuExpanded = true}
+                    .menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
             )
             ExposedDropdownMenu(
-                expanded = isTechniqueMenuExpanded,
-                onDismissRequest = {isTechniqueMenuExpanded = false}
+                expanded = expanded,
+                onDismissRequest = {expanded = false}
             ) {
                 techniques.forEach { techniqueOnList ->
                     DropdownMenuItem(
@@ -475,7 +475,7 @@ fun ThreadsConsumptionCalculateScreen() {
                         )},
                         onClick = {
                             technique = techniqueOnList
-                            isTechniqueMenuExpanded = false
+                            expanded = false
                         }
                     )
                 }
