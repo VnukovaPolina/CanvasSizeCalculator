@@ -1,5 +1,7 @@
 package xstitchcatwalk.canvassize
 
+import android.R.attr.enabled
+import android.R.attr.type
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -55,6 +57,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -457,7 +460,7 @@ fun ThreadsConsumptionCalculateScreen() {
                     .width(120.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 8.dp)
-                    .menuAnchor()
+                    .clickable {isTechniqueMenuExpanded = true}
             )
             ExposedDropdownMenu(
                 expanded = isTechniqueMenuExpanded,
