@@ -367,6 +367,8 @@ fun ThreadsConsumptionCalculateScreen() {
     var technique by remember {mutableStateOf(techniques[0])}
     var expanded by remember {mutableStateOf(false)}
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(Modifier
         .fillMaxWidth()
         .padding(top = 64.dp),
@@ -435,51 +437,77 @@ fun ThreadsConsumptionCalculateScreen() {
                 .padding(top = 8.dp)
         )
 
-        ExposedDropdownMenuBox(
+
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
-            expanded = expanded,
-            onExpandedChange = {expanded = it}
+            contentAlignment = Alignment.Center
         ) {
-            OutlinedTextField(
-                value = technique,
-                onValueChange = {},
-                label = {
-                    Text(
-                        stringResource(R.string.set_stitch_technique),
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                },
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )},
+            ExposedDropdownMenuBox(
                 modifier = Modifier
-                    .width(300.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp)
-                    .menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
-            )
-            ExposedDropdownMenu(
+                    .width(300.dp),
                 expanded = expanded,
-                onDismissRequest = {expanded = false}
+                onExpandedChange = {expanded = it}
             ) {
-                techniques.forEach { techniqueOnList ->
-                    DropdownMenuItem(
-                        text = {Text(
-                            techniqueOnList,
+                OutlinedTextField(
+                    value = technique,
+                    onValueChange = {},
+                    label = {
+                        Text(
+                            stringResource(R.string.set_stitch_technique),
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             style = MaterialTheme.typography.labelLarge
-                        )},
-                        onClick = {
-                            technique = techniqueOnList
-                            expanded = false
-                        }
-                    )
+                        )
+                    },
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )},
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(top = 8.dp)
+                        .menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {expanded = false}
+                ) {
+                    techniques.forEach { techniqueOnList ->
+                        DropdownMenuItem(
+                            text = {Text(
+                                techniqueOnList,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                style = MaterialTheme.typography.labelLarge
+                            )},
+                            onClick = {
+                                technique = techniqueOnList
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
+        }
+
+        ElevatedButton(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .align(Alignment.CenterHorizontally)
+                .wrapContentWidth(),
+            onClick = {
+                keyboardController?.hide()
+                viewModel.calculateCanvasSize()
+            },
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.buttonTextCalculateConsumption),
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }
@@ -497,7 +525,7 @@ fun SettingsScreen() {
 @RequiresApi(Build.VERSION_CODES.Q)
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CalculateCanvasSizePreview() {
     AppTheme {
         CanvasSizeCalculatorScreen()
     }

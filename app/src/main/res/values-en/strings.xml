@@ -19,4 +19,13 @@
     <string name="cm_dimensions">cm</string>
     <string name="meters_dimensions">m</string>
     <string name="aida_size_template">Aida %1$d: %2$.2f cm × %3$.2f cm</string>
+    <string name="set_stitch_technique">Stitching technique</string>
+    <string name="cross_stitch_technique">Cross stitch</string>
+    <string name="halfcross_technique">Half cross stitch</string>
+    <string name="backstitch_technique">Backstitch</string>
+    <string name="cross_stitch">Cross stitch</string>
+    <string name="set_stitches_number">Number of stitches</string>
+    <string name="set_fabric_count">Fabric count</string>
+    <string name="set_strands">Strands for stitch</string>
+    <string name="buttonTextCalculateConsumption">Calculate consumption</string>
 </resources>

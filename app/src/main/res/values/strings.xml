@@ -18,7 +18,6 @@
     <string name="cm_dimensions">см</string>
     <string name="meters_dimensions">м</string>
     <string name="aida_size_template">Аида %1$d: %2$.2f см × %3$.2f см</string>
-    <string name="cross_stitch_technique">Крест</string>
     <string name="halfcross_technique">Полукрест</string>
     <string name="backstitch_technique">Бэкстич</string>
     <string name="cross_stitch">Крест</string>
@@ -26,4 +25,6 @@
     <string name="set_fabric_count">Каунт ткани</string>
     <string name="set_strands">Сложения нити</string>
     <string name="set_stitch_technique">Техника вышивания</string>
+    <string name="cross_stitch_technique">Крест</string>
+    <string name="buttonTextCalculateConsumption">Рассчитать расход нитей</string>
 </resources>
