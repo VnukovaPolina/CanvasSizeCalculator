@@ -2,6 +2,7 @@ package xstitchcatwalk.canvassize
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +56,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -62,7 +64,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material3.ExposedDropdownMenuBoxScope
 import androidx.compose.material3.MenuAnchorType
 
 class MainActivity : ComponentActivity() {
@@ -95,19 +96,30 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
     val viewModel: StitchersAppViewModel = viewModel()
     val iconTint = MaterialTheme.colorScheme.onSurface
 
+    val menuBackgroundColor = MaterialTheme.colorScheme.surfaceVariant
+    val menuHeaderColor = MaterialTheme.colorScheme.primary
+/*    val activeItemColor = MaterialTheme.colorScheme.primaryContainer
+    val inactiveItemColor = MaterialTheme.colorScheme.surfaceVariant
+    val onActiveItemColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val onInactiveItemColor = MaterialTheme.colorScheme.onSurfaceVariant*/
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .background(menuBackgroundColor)
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .height(60.dp)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.primaryContainer
+                                    menuHeaderColor,
+                                    menuHeaderColor.copy(alpha = 0.85f)
                                 )
                             )
                         )
