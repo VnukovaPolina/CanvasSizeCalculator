@@ -28,4 +28,6 @@
     <string name="set_fabric_count">Каунт ткани</string>
     <string name="set_strands">Сложения нити</string>
     <string name="buttonTextCalculateConsumption">Рассчитать расход нитей</string>
+    <string name="consumption_screen_title">Данные для расхода нитей:</string>
+    <string name="thread_usage_result">Необходимо ниток: %.2f метров</string>
 </resources>

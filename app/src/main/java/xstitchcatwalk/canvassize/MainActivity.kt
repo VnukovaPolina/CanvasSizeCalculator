@@ -56,7 +56,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -65,6 +68,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.Surface
 
 class MainActivity : ComponentActivity() {
     private val viewModel: StitchersAppViewModel by viewModels()
@@ -106,97 +110,110 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Column(
+            Surface(
                 modifier = Modifier
-                    .wrapContentSize()
-                    .background(menuBackgroundColor)
+                    .wrapContentWidth()
+                    .fillMaxHeight()
+                    .background(menuBackgroundColor),
+                tonalElevation = 8.dp,
+                shape = MaterialTheme.shapes.extraLarge.copy(
+                    topEnd = CornerSize(0.dp),
+                    bottomEnd = CornerSize(16.dp)
+                )
             ) {
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    menuHeaderColor,
-                                    menuHeaderColor.copy(alpha = 0.85f)
+                        .wrapContentSize()
+                        .background(menuBackgroundColor)
+                        .width(IntrinsicSize.Max)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        menuHeaderColor,
+                                        menuHeaderColor.copy(alpha = 0.85f)
+                                    )
                                 )
                             )
+                    ) {
+                        Text(
+                            stringResource(R.string.menu),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(16.dp)
                         )
-                ) {
-                    Text(
-                        stringResource(R.string.menu),
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(16.dp)
+                    }
+
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.canvas_size_calculator)) },
+                        selected = selectedItem == 0,
+                        onClick = {
+                            selectedItem = 0
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_canvas_24),
+                                contentDescription = stringResource(R.string.canvas_size_calculator),
+                                tint = iconTint
+                            )
+                        }
                     )
+
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.threads_consumption_calculator)) },
+                        selected = selectedItem == 1,
+                        onClick = {
+                            selectedItem = 1
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_palette_24),
+                                contentDescription = stringResource(R.string.threads_consumption_calculator),
+                                tint = iconTint
+                            )
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.stitching_time_timer)) },
+                        selected = selectedItem == 2,
+                        onClick = {
+                            selectedItem = 2
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_timer_24),
+                                contentDescription = stringResource(R.string.stitching_time_timer),
+                                tint = iconTint
+                            )
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.settings_in_app)) },
+                        selected = selectedItem == 3,
+                        onClick = {
+                            selectedItem = 3
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_settings_24),
+                                contentDescription = stringResource(R.string.settings_in_app),
+                                tint = iconTint
+                            )
+                        }
+                    )
+
                 }
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.canvas_size_calculator)) },
-                    selected = selectedItem == 0,
-                    onClick = {
-                        selectedItem = 0
-                        scope.launch { drawerState.close() }
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_canvas_24),
-                            contentDescription = stringResource(R.string.canvas_size_calculator),
-                            tint = iconTint
-                        )
-                    }
-                )
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.threads_consumption_calculator)) },
-                    selected = selectedItem == 1,
-                    onClick = {
-                        selectedItem = 1
-                        scope.launch { drawerState.close() }
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_palette_24),
-                            contentDescription = stringResource(R.string.threads_consumption_calculator),
-                            tint = iconTint
-                        )
-                    }
-                )
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.stitching_time_timer)) },
-                    selected = selectedItem == 2,
-                    onClick = {
-                        selectedItem = 2
-                        scope.launch { drawerState.close() }
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_timer_24),
-                            contentDescription = stringResource(R.string.stitching_time_timer),
-                            tint = iconTint
-                        )
-                    }
-                )
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.settings_in_app)) },
-                    selected = selectedItem == 3,
-                    onClick = {
-                        selectedItem = 3
-                        scope.launch { drawerState.close() }
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_settings_24),
-                            contentDescription = stringResource(R.string.settings_in_app),
-                        tint = iconTint
-                        )
-                    }
-                )
-
             }
-        }
+            }
     ) {
 
         Scaffold(
@@ -368,16 +385,18 @@ fun CanvasSizeCalculatorScreen(
 fun ThreadsConsumptionCalculateScreen() {
     val viewModel: StitchersAppViewModel = viewModel()
 
-    var crossStitchTechnique = stringResource(R.string.cross_stitch_technique)
-    var halfCrossTechnique = stringResource(R.string.halfcross_technique)
-    var backstitchTechnique = stringResource(R.string.backstitch_technique)
-    val techniques = listOf(crossStitchTechnique, halfCrossTechnique, backstitchTechnique)
+    val techniques = listOf(
+        R.string.cross_stitch_technique,
+        R.string.halfcross_technique,
+        R.string.backstitch_technique
+    ).map { stringResource(it) }
 
     val stitches by viewModel.stitches.collectAsStateWithLifecycle()
-    var fabricCount by remember {mutableStateOf("")}
+    val fabricCount by viewModel.fabricCount.collectAsStateWithLifecycle()
     val strands by viewModel.strands.collectAsStateWithLifecycle()
-    var technique by remember {mutableStateOf(techniques[0])}
     var expanded by remember {mutableStateOf(false)}
+
+    val result by viewModel.threadUsageResult.collectAsStateWithLifecycle()
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -410,7 +429,9 @@ fun ThreadsConsumptionCalculateScreen() {
 
         OutlinedTextField(
             value = fabricCount,
-            onValueChange = { fabricCount = it },
+            onValueChange = { newValue ->
+                viewModel.updateFabricCount(newValue)
+            },
             label = {Text(
                 stringResource(R.string.set_fabric_count),
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -463,7 +484,9 @@ fun ThreadsConsumptionCalculateScreen() {
                 onExpandedChange = {expanded = it}
             ) {
                 OutlinedTextField(
-                    value = technique,
+                    value = techniques.firstOrNull {
+                        it == stringResource(viewModel.technique.value)
+                    } ?: "",
                     onValueChange = {},
                     label = {
                         Text(
@@ -485,15 +508,22 @@ fun ThreadsConsumptionCalculateScreen() {
                     expanded = expanded,
                     onDismissRequest = {expanded = false}
                 ) {
-                    techniques.forEach { techniqueOnList ->
+                    techniques.forEachIndexed { index, technique ->
                         DropdownMenuItem(
                             text = {Text(
-                                techniqueOnList,
+                                technique,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 style = MaterialTheme.typography.labelLarge
                             )},
                             onClick = {
-                                technique = techniqueOnList
+                                viewModel.updateTechnique(
+                                    when(index) {
+                                        0 -> R.string.cross_stitch_technique
+                                        1 -> R.string.halfcross_technique
+                                        2 -> R.string.backstitch_technique
+                                        else -> R.string.cross_stitch_technique
+                                    }
+                                )
                                 expanded = false
                             }
                         )
@@ -509,7 +539,7 @@ fun ThreadsConsumptionCalculateScreen() {
                 .wrapContentWidth(),
             onClick = {
                 keyboardController?.hide()
-                viewModel.calculateCanvasSize()
+                viewModel.calculateThreadUsage()
             },
             colors = ButtonDefaults.elevatedButtonColors(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
@@ -519,6 +549,14 @@ fun ThreadsConsumptionCalculateScreen() {
             Text(
                 text = stringResource(R.string.buttonTextCalculateConsumption),
                 style = MaterialTheme.typography.labelLarge
+            )
+        }
+
+        result?.let { usage ->
+            Text(
+                text = stringResource(R.string.thread_usage_result, usage),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(16.dp)
             )
         }
     }

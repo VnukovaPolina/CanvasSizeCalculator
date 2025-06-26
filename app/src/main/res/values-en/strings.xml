@@ -28,4 +28,6 @@
     <string name="set_fabric_count">Fabric count</string>
     <string name="set_strands">Strands for stitch</string>
     <string name="buttonTextCalculateConsumption">Calculate consumption</string>
+    <string name="consumption_screen_title">Stitching details:</string>
+    <string name="thread_usage_result">Threads needed: %.2f meters</string>
 </resources>
