@@ -85,6 +85,7 @@ open class StitchersAppViewModel(
             R.string.cross_stitch_technique -> 1f
             else -> 1f
         }
-        _threadUsageResult.value = stitchesForCalculation * usagePerCross * (strandsForCalculation/2f) * techniqueFactor
+        // Расчет проводится для стандартной пасмы в 8 нитей! Поэтому в конце делим расход на 8
+        _threadUsageResult.value = (stitchesForCalculation * usagePerCross * (strandsForCalculation/2f) * techniqueFactor) / 8f
     }
 }
