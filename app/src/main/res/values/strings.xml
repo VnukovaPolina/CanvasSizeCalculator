@@ -29,4 +29,8 @@
     <string name="buttonTextCalculateConsumption">Рассчитать расход нитей</string>
     <string name="consumption_screen_title">Данные для расхода нитей:</string>
     <string name="thread_usage_result">Необходимо ниток: %.2f метров</string>
+    <string name="one_hour_stitching_notification">Вы вышиваете уже час - пора сделать разминку для глаз</string>
+    <string name="two_hours_stitching_notification">Вы вышиваете уже 2 часа - пора немного подвигаться</string>
+    <string name="reset_timer_text">Сбросить</string>
+    <string name="OK">OK</string>
 </resources>

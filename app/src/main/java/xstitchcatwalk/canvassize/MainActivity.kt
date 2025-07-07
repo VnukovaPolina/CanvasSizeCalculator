@@ -1,7 +1,9 @@
 package xstitchcatwalk.canvassize
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -56,10 +58,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -69,10 +75,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.random.Random
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: StitchersAppViewModel by viewModels()
-
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +109,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
-    val viewModel: StitchersAppViewModel = viewModel()
+    val viewModel: StitchersAppViewModel = hiltViewModel()
     val iconTint = MaterialTheme.colorScheme.onSurface
 
     val menuBackgroundColor = MaterialTheme.colorScheme.surfaceVariant
@@ -254,7 +266,7 @@ fun CrossStitchersApp(modifier: Modifier = Modifier) {
 fun CanvasSizeCalculatorScreen(
     modifier: Modifier.Companion = Modifier
 ) {
-    val viewModel: StitchersAppViewModel = viewModel()
+    val viewModel: StitchersAppViewModel = hiltViewModel()
 
     Column(Modifier
         .fillMaxWidth()
@@ -380,10 +392,11 @@ fun CanvasSizeCalculatorScreen(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadsConsumptionCalculateScreen() {
-    val viewModel: StitchersAppViewModel = viewModel()
+    val viewModel: StitchersAppViewModel = hiltViewModel()
 
     val techniques = listOf(
         R.string.cross_stitch_technique,
@@ -564,13 +577,128 @@ fun ThreadsConsumptionCalculateScreen() {
 
 @Composable
 fun TimerScreen() {
-    Text("Timer screen")
+    val context = LocalContext.current
+    val viewModel: StitchersAppViewModel = hiltViewModel()
+    val isRunning by viewModel.TimerIsRunning.collectAsStateWithLifecycle()
+    val elapsedTime by viewModel.elapsedTime.collectAsStateWithLifecycle()
+    val notification by viewModel.showNotification.collectAsStateWithLifecycle()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            IconButton(
+                onClick = { viewModel.toggleTimer() },
+                modifier = Modifier.size(120.dp)
+            ) {
+                Icon(
+                    painter = painterResource(
+                        if (isRunning) R.drawable.baseline_pause_circle_outline_24 else R.drawable.baseline_play_circle_outline_24
+                    ),
+                    contentDescription = if (isRunning) "Pause" else "Play",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(80.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Непосредственно таймер
+            Text(
+                text = formatTime(elapsedTime),
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Кнопка сброса под временем
+            if (elapsedTime > 0) {
+                TextButton(
+                    onClick = { viewModel.resetTimer() }
+                ) {
+                    Text(
+                        stringResource(R.string.reset_timer_text),
+                        style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
+        // Показ уведомлений при достижении определенного времени вышивания
+        notification?.let { (show, message) ->
+            if (show) {
+                ShowNotification(
+                    message = message,
+                    onDismiss = { viewModel.dismissNotification() }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ShowNotification(message: String, onDismiss: () -> Unit) {
+    val randomX = remember { Random.nextInt(-150, 150) }
+    val randomY = remember { Random.nextInt(-100, 100) }
+    val bubbleShape = MaterialTheme.shapes.extraLarge.copy(
+        topStart = CornerSize(0.dp),
+        bottomEnd = CornerSize(0.dp)
+    )
+
+    Box(
+        modifier = Modifier
+            .offset(x = randomX.dp, y = randomY.dp)
+            .clip(bubbleShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .shadow(4.dp, bubbleShape)
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                text = "💡",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(stringResource(R.string.OK))
+            }
+        }
+    }
+}
+
+fun formatTime(seconds: Long): String {
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    return String.format("%02d:%02d", hours, minutes)
 }
 
 @Composable
 fun SettingsScreen() {
     Text("Settings screen")
 }
+
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Preview(showBackground = true)

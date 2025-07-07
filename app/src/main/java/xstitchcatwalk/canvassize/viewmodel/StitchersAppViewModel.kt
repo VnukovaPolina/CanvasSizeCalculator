@@ -1,15 +1,27 @@
 package xstitchcatwalk.canvassize.viewmodel
 
+import android.content.Context
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.R
 import xstitchcatwalk.canvassize.data.FabricCounts
+import javax.inject.Inject
 
-open class StitchersAppViewModel(
-    private val canvasCounts: List<Int> = FabricCounts.counts
+
+@HiltViewModel
+class StitchersAppViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
+    private val canvasCounts = listOf(14, 16, 18)
+    // Переменные для калькулятора канвы:
     private val _width = MutableStateFlow<String>("")
     val widthInStitches: StateFlow<String> = _width
 
@@ -19,6 +31,7 @@ open class StitchersAppViewModel(
     private val _resultCanvas = MutableStateFlow<Map<Int, Pair<Float, Float>>?>(null)
     val result: StateFlow<Map<Int, Pair<Float, Float>>?> = _resultCanvas
 
+    // Переменные для калькулятора расхода нитей:
     private val _stitches = MutableStateFlow<String>("")
     val stitches: StateFlow<String> = _stitches
 
@@ -34,6 +47,25 @@ open class StitchersAppViewModel(
     private val _threadUsageResult = MutableStateFlow<Float?>(null)
     val threadUsageResult: StateFlow<Float?> = _threadUsageResult
 
+    // Переменные для таймера вышивания:
+    private val _TimerIsRunning = MutableStateFlow(false)
+    val TimerIsRunning: StateFlow<Boolean> = _TimerIsRunning
+
+    private val _elapsedTime = MutableStateFlow(0L) // в секундах
+    val elapsedTime: StateFlow<Long> = _elapsedTime
+
+    private val _showNotification = MutableStateFlow<Pair<Boolean, String>?>(null)
+    val showNotification: StateFlow<Pair<Boolean, String>?> = _showNotification
+
+    private var timerJob: Job? = null
+
+    private var hourNotificationShown = false
+    private var twoHoursNotificationShown = false
+
+    private val hourMessage = context.getString(R.string.one_hour_stitching_notification)
+    private val twoHoursMessage = context.getString(R.string.two_hours_stitching_notification)
+
+    // Функции для обновления отображения параметров
     fun updateWidth(value: String) {
         _width.value = value
     }
@@ -58,6 +90,7 @@ open class StitchersAppViewModel(
         _technique.value = value
     }
 
+    // Логика расчета размеров канвы БЕЗ припусков (полей)
     fun calculateCanvasSize() {
         val widthStitches = widthInStitches.value.toFloatOrNull() ?: 0f
         val heightStitches = heightInStitches.value.toFloatOrNull() ?: 0f
@@ -69,11 +102,13 @@ open class StitchersAppViewModel(
         }
     }
 
+    // Логика расчета расхода нитей с запасом
     fun calculateThreadUsage() {
         val stitchesForCalculation = stitches.value.toFloatOrNull() ?: 0f
         val fabricCountForCalculation = fabricCount.value.toFloatOrNull() ?: 0f
         val strandsForCalculation = strands.value.toFloatOrNull() ?: 0f
         val usagePerCross = when(fabricCountForCalculation) {
+            // Расчет с запасом. На 1 крестик на 14 каунте без запаса нужно примерно 2,7 см одной нити
             14f -> 0.036f
             16f -> 0.032f
             18f -> 0.028f
@@ -87,5 +122,60 @@ open class StitchersAppViewModel(
         }
         // Расчет проводится для стандартной пасмы в 8 нитей! Поэтому в конце делим расход на 8
         _threadUsageResult.value = (stitchesForCalculation * usagePerCross * (strandsForCalculation/2f) * techniqueFactor) / 8f
+    }
+
+    // Функции, описывающие работу ТАЙМЕРА вышивания
+    fun toggleTimer() {
+        _TimerIsRunning.value = !_TimerIsRunning.value
+        if (_TimerIsRunning.value) {
+            startTimer()
+        } else {
+            stopTimer()
+        }
+    }
+
+    fun resetTimer() {
+        stopTimer()
+        _elapsedTime.value = 0L
+        resetNotifications()
+    }
+
+    fun dismissNotification() {
+        _showNotification.value = null
+    }
+
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (TimerIsRunning.value) {
+                delay(1000L)
+                _elapsedTime.value += 1
+                checkForNotifications()
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        _TimerIsRunning.value = false
+    }
+
+    private fun checkForNotifications() {
+        val minutes = elapsedTime.value / 60
+        when {
+            minutes >= 60L && !hourNotificationShown -> {
+                _showNotification.value = true to hourMessage
+                hourNotificationShown = true
+            }
+            minutes >= 120L && !twoHoursNotificationShown -> {
+                _showNotification.value = true to twoHoursMessage
+                twoHoursNotificationShown = true
+            }
+        }
+    }
+
+    fun resetNotifications() {
+        hourNotificationShown = false
+        twoHoursNotificationShown = false
+        _showNotification.value = null
     }
 }
