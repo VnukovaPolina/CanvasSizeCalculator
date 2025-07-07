@@ -33,4 +33,5 @@
     <string name="two_hours_stitching_notification">Вы вышиваете уже 2 часа - пора немного подвигаться</string>
     <string name="reset_timer_text">Сбросить</string>
     <string name="OK">OK</string>
+    <string name="minute_notification">1 minute!</string>
 </resources>

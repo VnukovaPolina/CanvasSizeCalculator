@@ -14,13 +14,14 @@ import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.R
 import xstitchcatwalk.canvassize.data.FabricCounts
 import javax.inject.Inject
+import javax.inject.Named
 
 
 @HiltViewModel
 class StitchersAppViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val aidaCounts: List<Int>
 ) : ViewModel() {
-    private val canvasCounts = listOf(14, 16, 18)
     // Переменные для калькулятора канвы:
     private val _width = MutableStateFlow<String>("")
     val widthInStitches: StateFlow<String> = _width
@@ -95,7 +96,7 @@ class StitchersAppViewModel @Inject constructor(
         val widthStitches = widthInStitches.value.toFloatOrNull() ?: 0f
         val heightStitches = heightInStitches.value.toFloatOrNull() ?: 0f
 
-        _resultCanvas.value = canvasCounts.associate { count ->
+        _resultCanvas.value = aidaCounts.associate { count ->
             val widthCm = (widthStitches * 2.54f) / count
             val heightCm = (heightStitches * 2.54f) / count
             count to (widthCm to heightCm)
