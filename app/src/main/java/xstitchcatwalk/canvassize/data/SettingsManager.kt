@@ -16,6 +16,7 @@ class SettingsManager @Inject constructor(
 
     private object PreferencesKeys {
         val DARK_THEME = booleanPreferencesKey("dark_theme")
+        val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
     }
 
     val themeFlow: Flow<Boolean> = context.dataStore.data
@@ -27,6 +28,17 @@ class SettingsManager @Inject constructor(
         context.dataStore.edit { preferences ->
             val current = preferences[PreferencesKeys.DARK_THEME] ?: false
             preferences[PreferencesKeys.DARK_THEME] = !current
+        }
+    }
+
+    val notificationsEnabledFlow: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.NOTIFICATIONS_ENABLED] ?: true
+        }
+
+    suspend fun setNotificationsEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.NOTIFICATIONS_ENABLED] = enabled
         }
     }
 }

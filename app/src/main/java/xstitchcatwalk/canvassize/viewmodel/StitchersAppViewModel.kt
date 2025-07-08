@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.R
+import xstitchcatwalk.canvassize.data.SettingsManager
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -19,7 +20,8 @@ import javax.inject.Named
 @HiltViewModel
 class StitchersAppViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val aidaCounts: List<Int>
+    private val aidaCounts: List<Int>,
+    private val settingsManager: SettingsManager
 ) : ViewModel() {
     // Переменные для калькулятора канвы:
     private val _width = MutableStateFlow<String>("")
@@ -159,7 +161,7 @@ class StitchersAppViewModel @Inject constructor(
         _TimerIsRunning.value = false
     }
 
-    private fun checkForNotifications() {
+/*    private fun checkForNotifications() {
         val minutes = elapsedTime.value / 60
         when {
             minutes >= 60L && !hourNotificationShown -> {
@@ -171,11 +173,31 @@ class StitchersAppViewModel @Inject constructor(
                 twoHoursNotificationShown = true
             }
         }
-    }
+    }*/
 
     fun resetNotifications() {
         hourNotificationShown = false
         twoHoursNotificationShown = false
         _showNotification.value = null
+    }
+
+    private fun checkForNotifications() {
+        viewModelScope.launch {
+            settingsManager.notificationsEnabledFlow.collect { enabled ->
+                if (enabled) {
+                    val minutes = elapsedTime.value / 60
+                    when {
+                        minutes >= 120L && !twoHoursNotificationShown -> {
+                            _showNotification.value = true to twoHoursMessage
+                            twoHoursNotificationShown = true
+                        }
+                        minutes >= 60L && !hourNotificationShown -> {
+                            _showNotification.value = true to hourMessage
+                            hourNotificationShown = true
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -19,4 +19,12 @@ class SettingsViewModel @Inject constructor(
             settingsManager.toggleTheme()
         }
     }
+
+    val notificationsEnabled: Flow<Boolean> = settingsManager.notificationsEnabledFlow
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsManager.setNotificationsEnabled(enabled)
+        }
+    }
 }

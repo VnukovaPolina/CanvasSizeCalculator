@@ -1,10 +1,7 @@
 package xstitchcatwalk.canvassize
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import xstitchcatwalk.canvassize.ui.theme.AppTheme
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
@@ -50,7 +46,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.viewmodel.StitchersAppViewModel
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -58,7 +53,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -703,6 +697,7 @@ fun formatTime(seconds: Long): String {
 fun SettingsScreen() {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val isDarkTheme by settingsViewModel.isDarkTheme.collectAsState(initial = false)
+    val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState(initial = true)
 
     Column(
         modifier = Modifier
@@ -721,6 +716,24 @@ fun SettingsScreen() {
             Switch(
                 checked = isDarkTheme,
                 onCheckedChange = { settingsViewModel.toggleTheme() }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Переключение уведомлений
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.enable_notifications),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Switch(
+                checked = notificationsEnabled,
+                onCheckedChange = { settingsViewModel.setNotificationsEnabled(it) }
             )
         }
     }
