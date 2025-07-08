@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import xstitchcatwalk.canvassize.R
-import xstitchcatwalk.canvassize.data.FabricCounts
 import javax.inject.Inject
 import javax.inject.Named
 

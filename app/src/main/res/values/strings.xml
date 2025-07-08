@@ -34,4 +34,5 @@
     <string name="reset_timer_text">Сбросить</string>
     <string name="OK">OK</string>
     <string name="minute_notification">1 minute!</string>
+    <string name="dark_theme_settings_text">Темная тема</string>
 </resources>

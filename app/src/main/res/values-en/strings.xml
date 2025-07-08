@@ -34,4 +34,6 @@
     <string name="two_hours_stitching_notification">You\'ve been stitching for 2 hours. Have some exercise or a light walk.</string>
     <string name="reset_timer_text">Reset</string>
     <string name="OK">OK</string>
+    <string name="minute_notification">1 minute</string>
+    <string name="dark_theme_settings_text">Dark theme</string>
 </resources>

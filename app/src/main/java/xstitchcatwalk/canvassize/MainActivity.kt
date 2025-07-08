@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -75,12 +76,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import xstitchcatwalk.canvassize.viewmodel.SettingsViewModel
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -90,7 +93,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContent {
-            AppTheme {
+            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            val isDarkTheme by settingsViewModel.isDarkTheme.collectAsState(initial = false)
+            AppTheme(darkTheme = isDarkTheme) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CrossStitchersApp(
                         modifier = Modifier.padding(innerPadding)
@@ -693,9 +698,32 @@ fun formatTime(seconds: Long): String {
     return String.format("%02d:%02d", hours, minutes)
 }
 
+
 @Composable
 fun SettingsScreen() {
-    Text("Settings screen")
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val isDarkTheme by settingsViewModel.isDarkTheme.collectAsState(initial = false)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Темная тема",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Switch(
+                checked = isDarkTheme,
+                onCheckedChange = { settingsViewModel.toggleTheme() }
+            )
+        }
+    }
 }
 
 
